@@ -16,6 +16,8 @@ public class Produto {
 
     private String nome;
     private String descricao;
+
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
 
     @OneToMany(mappedBy = "produto")

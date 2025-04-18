@@ -2,6 +2,7 @@ package springboot.project.basic.projetospring.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import springboot.project.basic.projetospring.dtos.StatusPedido;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,9 @@ public class Pedido {
     private Long id;
 
     private LocalDateTime dataPedido;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPedido status;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -27,5 +30,4 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
-
 }

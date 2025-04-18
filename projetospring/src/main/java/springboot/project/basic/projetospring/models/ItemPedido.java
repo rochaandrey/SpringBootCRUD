@@ -12,7 +12,10 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private int quantidade;
+
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precoUnitario;
 
     @ManyToOne
