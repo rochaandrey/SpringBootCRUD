@@ -59,7 +59,7 @@ public class ClientController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity updateClient(@PathVariable (value = "id") Long id, @RequestBody RequestClientDTO requestClientDTO){
         try {
             Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("O CARA NEM EXISTE KKKKKKKKKK"));
