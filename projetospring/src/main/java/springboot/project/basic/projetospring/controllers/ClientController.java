@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springboot.project.basic.projetospring.dtos.RequestClientDTO;
 import springboot.project.basic.projetospring.infra.ResourceNotFoundException;
@@ -40,8 +41,9 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
+
     @PostMapping
-    public ResponseEntity createClient(@RequestBody RequestClientDTO requestClientDTO){
+    public ResponseEntity createClient(@RequestBody @Validated RequestClientDTO requestClientDTO){
         Cliente cliente = new Cliente();
         BeanUtils.copyProperties(requestClientDTO, cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteRepository.save(cliente));
@@ -60,10 +62,17 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateClient(@PathVariable (value = "id") Long id, @RequestBody RequestClientDTO requestClientDTO){
+    public ResponseEntity updateClient(@PathVariable (value = "id") Long id, @RequestBody @Validated RequestClientDTO requestClientDTO){
         try {
             Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("O CARA NEM EXISTE KKKKKKKKKK"));
-            BeanUtils.copyProperties(requestClientDTO, cliente);
+
+            if (requestClientDTO.nome() != null) {
+                cliente.setNome(requestClientDTO.nome());
+            }
+            if (requestClientDTO.email() != null) {
+                cliente.setEmail(requestClientDTO.email());
+            }
+
             clienteRepository.save(cliente);
             return ResponseEntity.status(HttpStatus.OK).build();
         }catch (ResourceNotFoundException ex) {
