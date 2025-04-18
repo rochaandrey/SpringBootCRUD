@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springboot.project.basic.projetospring.dtos.RequestClientDTO;
+import springboot.project.basic.projetospring.infra.ResourceNotFoundException;
 import springboot.project.basic.projetospring.models.Cliente;
 import springboot.project.basic.projetospring.repository.ClienteRepository;
 import springboot.project.basic.projetospring.repository.ProdutoRepository;
@@ -13,7 +14,7 @@ import springboot.project.basic.projetospring.repository.ProdutoRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/map")
+@RequestMapping("/cliente")
 public class ClientController {
     @Autowired
     private ClienteRepository clienteRepository;
@@ -29,13 +30,13 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity getClient(@PathVariable Long id){
-        Cliente cliente = clienteRepository.findById(id).orElseThrow(()->new RuntimeException("cliente não encontrado"));
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(()->new RuntimeException("O CARA NEM EXISTE KKKKKKKKKK"));
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
     @GetMapping("/{email}")
     public ResponseEntity getClient(@PathVariable String email){
-        Cliente cliente = clienteRepository.findByEmail(email).orElseThrow(()->new RuntimeException("cliente não encontrado"));
+        Cliente cliente = clienteRepository.findByEmail(email).orElseThrow(()->new RuntimeException("O CARA NEM EXISTE KKKKKKKKKK"));
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
@@ -45,5 +46,28 @@ public class ClientController {
         BeanUtils.copyProperties(requestClientDTO, cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteRepository.save(cliente));
     }
-    //test
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+        try {
+            Cliente cliente = clienteRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("O CARA NEM EXISTE KKKKKKKKKK"));
+            clienteRepository.delete(cliente);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity updateClient(@PathVariable (value = "id") Long id, @RequestBody RequestClientDTO requestClientDTO){
+        try {
+            Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("O CARA NEM EXISTE KKKKKKKKKK"));
+            BeanUtils.copyProperties(requestClientDTO, cliente);
+            clienteRepository.save(cliente);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
