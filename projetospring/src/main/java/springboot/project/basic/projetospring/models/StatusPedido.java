@@ -1,4 +1,4 @@
-package springboot.project.basic.projetospring.dtos;
+package springboot.project.basic.projetospring.models;
 
 public enum StatusPedido  {
     PENDENTE,

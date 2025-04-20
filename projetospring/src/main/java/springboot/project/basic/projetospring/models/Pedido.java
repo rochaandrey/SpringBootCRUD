@@ -1,8 +1,8 @@
 package springboot.project.basic.projetospring.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import lombok.*;
-import springboot.project.basic.projetospring.dtos.StatusPedido;
 
 import java.time.LocalDateTime;
 import java.util.List;
